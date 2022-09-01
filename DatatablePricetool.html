@@ -1,0 +1,26 @@
+<template>
+    <!-- <lightning-spinner  variant="brand"  size="large" > -->
+        <template if:true={PriceTool.length}>
+        <lightning-card title="PriceBook Tool">
+            <div class="slds-var-p-around_medium"    >
+                <lightning-datatable
+                    key-field="Id"
+                    data={PriceTool}
+                    columns={columns}
+                    draft-values={draftValues}
+                    onsave={handleSave}
+                    oncancel={handleCancel}
+                    oncellchange={handlerowchange}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </div>
+        </lightning-card>
+        </template>
+        <template if:false={nopricebook}>
+            <lightning-card title="PriceBook Tool">
+                <div class="slds-var-p-around_medium"    >
+            Please select<Strong>PriceBook</Strong>first</div>
+        </lightning-card>
+        </template>
+<!-- </lightning-spinner> -->
+</template>
