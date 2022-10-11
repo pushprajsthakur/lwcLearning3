@@ -1,19 +1,20 @@
 <template>
-    <lightning-card title="Search Property Related Contacts">
+    <lightning-card title="Search Account ">
       <lightning-input id="inputBox" label="Search" name="Search" value={searchQuery} onchange={inputChange}></lightning-input>
       <lightning-button id="lButton" label="Search" name ="Search" onclick={handleClick}></lightning-button>
       <br/>
       <template if:true={showResults}>
         
-  
+        <lightning-card title="Billing Account">
             <lightning-datatable
                       key-field="Id"
-                      data={showdata}
+                      data={parentData}
                       columns={columns}
                       draft-values={draftValues}
                       onsave={handleSave}
                       >
                   </lightning-datatable> 
+                </lightning-card>
                   <lightning-button 
                   variant="Neutral"
                 label="Create Account"
@@ -22,6 +23,16 @@
                 slot="actions"
                 icon-name="utility:check">
         </lightning-button>
+        <lightning-card title="Service Account">
+        <lightning-datatable
+                      key-field="Id"
+                      data={serviceData}
+                      columns={columns}
+                      draft-values={draftValues}
+                      onsave={handleSave}
+                      >
+                  </lightning-datatable> 
+                </lightning-card>
       </template>
     
       </lightning-card>
