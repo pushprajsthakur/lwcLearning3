@@ -1,0 +1,28 @@
+<template>
+    <lightning-card title="Search Property Related Contacts">
+      <lightning-input id="inputBox" label="Search" name="Search" value={searchQuery} onchange={inputChange}></lightning-input>
+      <lightning-button id="lButton" label="Search" name ="Search" onclick={handleClick}></lightning-button>
+      <br/>
+      <template if:true={showResults}>
+        
+  
+            <lightning-datatable
+                      key-field="Id"
+                      data={showdata}
+                      columns={columns}
+                      draft-values={draftValues}
+                      onsave={handleSave}
+                      >
+                  </lightning-datatable> 
+                  <lightning-button 
+                  variant="Neutral"
+                label="Create Account"
+                title="Create Account"
+                onclick={getSelectedRec} 
+                slot="actions"
+                icon-name="utility:check">
+        </lightning-button>
+      </template>
+    
+      </lightning-card>
+  </template>
