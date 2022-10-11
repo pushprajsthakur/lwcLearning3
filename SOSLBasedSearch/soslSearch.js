@@ -8,6 +8,7 @@ import { encodeDefaultFieldValues } from 'lightning/pageReferenceUtils';
 const COLS =[
     
     {label:'Name', fieldName:'Name'},
+    {label:'Service Type', fieldName:'ServiceType'},
     {label:'Record Type', fieldName:'RecordType'},
     {label: 'Street', fieldName: 'BillingStreet' , type: 'text'},
     {label: 'City', fieldName: 'BillingCity' , type: 'text'}, 
@@ -22,7 +23,9 @@ export default class SoslSearch extends NavigationMixin(LightningElement) {
     @track searchResults = null;
     @track showResults = false;
     columns = COLS
-    @track showdata =[]
+    @track parentData =[];
+    @track serviceDatafilter=[];
+    @track BillingDatafilter=[];
     @api valueChosen;
     
 
@@ -35,10 +38,27 @@ export default class SoslSearch extends NavigationMixin(LightningElement) {
          //BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry
             this.searchResults = JSON.parse(JSON.stringify(data));
             console.log(' this.searchResults  :'+ JSON.stringify(this.searchResults));
-            this.showdata = this.searchResults.map(item=>{
+
+            this.BillingDatafilter =this.searchResults.filter(function (item)
+            {
+              return item.Service_Type__c =='Billing' 
+                    
+            }
+            );
+            this.serviceDatafilter =this.searchResults.filter(function (item)
+            {
+              return item.Service_Type__c =='Service' 
+                    
+            }
+            );
+
+            this.parentData = this.BillingDatafilter.map(item=>{
+               
+                
                 return {
                     "Id": item.Id,
                     "Name": item.Name,
+                    "ServiceType":item.Service_Type__c,
                     "RecordType":'RecordType' in item ?item.RecordType.Name :"",
                     "BillingStreet":'BillingStreet' in item ?item.BillingStreet :"",
                     "BillingCity":'BillingCity' in item ?item.BillingCity :"",
@@ -49,9 +69,26 @@ export default class SoslSearch extends NavigationMixin(LightningElement) {
                    
                 }
             })
-            console.log('this.showdata): '+JSON.stringify(this.showdata));
+            this.serviceData= this.serviceDatafilter.map(item=>{
+                return {
+                    "Id": item.Id,
+                    "Name": item.Name,
+                    "ServiceType":item.Service_Type__c,
+                    "RecordType":'RecordType' in item ?item.RecordType.Name :"",
+                    "BillingStreet":'BillingStreet' in item ?item.BillingStreet :"",
+                    "BillingCity":'BillingCity' in item ?item.BillingCity :"",
+                    "BillingState":'BillingState' in item ?item.BillingState :"",
+                    "BillingCountry":'BillingCountry' in item ?item.BillingCountry :"",
+                    "BillingPostalCode":'BillingPostalCode' in item ?item.BillingPostalCode :"",
+                    
+                   
+                }
+            })
+
+
+            console.log('this.parentData): '+JSON.stringify(this.parentData));
             
-            console.log('this.showdata): '+JSON.stringify(this.showdata));
+            console.log('this.serviceData): '+JSON.stringify(this.serviceData));
             this.showResults = true;
             this.dispatchEvent(new ShowToastEvent({
                 title: 'Success',
@@ -96,16 +133,18 @@ export default class SoslSearch extends NavigationMixin(LightningElement) {
             ParentId: selectedRecords[0].Id
            
         });
-           this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
-            attributes: {
-                objectApiName: 'Account',
-                actionName: 'new'
-            },
-            state: {
-                defaultFieldValues: defaultValues
-            }
-        });
+
+        /* Navigate to Create Account with Parent Id selected*/
+        //    this[NavigationMixin.Navigate]({
+        //     type: 'standard__objectPage',
+        //     attributes: {
+        //         objectApiName: 'Account',
+        //         actionName: 'new'
+        //     },
+        //     state: {
+        //         defaultFieldValues: defaultValues
+        //     }
+        // });
         }  
         if(selectedRecords.length > 1  ){
             this.dispatchEvent(new ShowToastEvent({
